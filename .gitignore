@@ -1,0 +1,12 @@
+*.swp
+*.swo
+*.log
+config.json
+tests.json
+.idea
+core
+*.pyc
+venv
+*.egg-info
+dist
+build
