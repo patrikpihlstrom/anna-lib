@@ -29,6 +29,6 @@ def create(options):
 
 	resolution = tuple(str(options['resolution']).split('x')) if 'resolution' in options and options[
 		'resolution'] is not None else (1920, 1080)
-	driver.set_window_size(resolution[0], resolution[1])
+	#driver.set_window_size(resolution[0], resolution[1])
 
 	return driver

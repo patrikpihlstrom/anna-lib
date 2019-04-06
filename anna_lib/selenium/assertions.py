@@ -7,7 +7,7 @@ def current_url_in(driver, expected, timeout=16):
 	if not passed and timeout > 0:
 		time.sleep(1)
 		return current_url_in(driver, expected, timeout - 1)
-	return {'key': 'current_url', 'pass': passed, 'current': driver.current_url, 'expected': ['in', expected]}
+	return {'key': 'current_url', 'passed': passed, 'current': driver.current_url, 'expected': ['in', expected]}
 
 
 def current_url_is(driver, expected, timeout=16):
@@ -15,7 +15,7 @@ def current_url_is(driver, expected, timeout=16):
 	if not passed and timeout > 0:
 		time.sleep(1)
 		return current_url_is(driver, expected, timeout - 1)
-	return {'key': 'current_url', 'pass': passed, 'current': driver.current_url, 'expected': expected}
+	return {'key': 'current_url', 'passed': passed, 'current': driver.current_url, 'expected': expected}
 
 
 def current_url(driver, assertion, timeout=16):
@@ -26,4 +26,7 @@ def current_url(driver, assertion, timeout=16):
 
 
 def element_exists(driver, assertion, timeout=16):
-	return {'key': 'element_exists', 'pass': util.get_element(driver, assertion['target'], timeout) not in [None, False, []]}
+	return {
+		'key': 'element_exists', 'target': assertion['target'],
+		'passed': util.get_element(driver, assertion['target'], timeout) not in [None, False, []]
+	}

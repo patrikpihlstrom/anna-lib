@@ -5,7 +5,7 @@ with open('README.md', 'r') as f:
 
 setuptools.setup(
     name='anna_lib',
-    version='0.0.1',
+    version='0.0.2',
     author='Patrik Pihlstrom',
     author_email='patrik.pihlstrom@gmail.com',
     url='https://github.com/patrikpihlstrom/anna-lib',

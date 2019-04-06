@@ -10,6 +10,7 @@ from . import util
 
 
 def send_keys(driver, event):
+	event['type'] = 'send_keys'
 	if wait(driver, event):
 		if 'target' in event and not isinstance(event['target'], dict):
 			event['target'] = {'type': 'css', 'value': event['target']}
@@ -19,6 +20,7 @@ def send_keys(driver, event):
 
 
 def submit(driver, event):
+	event['type'] = 'submit'
 	if wait(driver, event):
 		if 'target' in event and not isinstance(event['target'], dict):
 			event['target'] = {'type': 'css', 'value': event['target']}
@@ -27,6 +29,7 @@ def submit(driver, event):
 
 
 def click(driver, event):
+	event['type'] = 'click'
 	if wait(driver, event):
 		if 'target' in event and not isinstance(event['target'], dict):
 			event['target'] = {'type': 'css', 'value': event['target']}
@@ -41,6 +44,7 @@ def click(driver, event):
 
 
 def hover(driver, event):
+	event['type'] = 'hover'
 	if wait(driver, event):
 		if 'target' in event and not isinstance(event['target'], dict):
 			event['target'] = {'type': 'css', 'value': event['target']}
@@ -51,6 +55,7 @@ def hover(driver, event):
 
 
 def get(driver, event):
+	event['type'] = 'get'
 	if 'target' in event and not isinstance(event['target'], dict):
 		event['target'] = {'type': 'css', 'value': event['target']}
 	driver.get(event['target'])
@@ -63,6 +68,8 @@ def wait(driver, event):
 	:param event:
 	:return:
 	"""
+	if 'type' not in event:
+		event['type'] = 'wait'
 	if 'target' in event and not isinstance(event['target'], dict):
 		event['target'] = {'type': 'css', 'value': event['target']}
 	try:
@@ -86,10 +93,12 @@ def wait(driver, event):
 
 
 def sleep(driver, event):
+	event['type'] = 'sleep'
 	time.sleep(event['value'])
 
 
 def switch_to(driver, event):
+	event['type'] = 'switch_to'
 	if 'target' in event and not isinstance(event['target'], dict):
 		event['target'] = {'type': 'css', 'value': event['target']}
 	scroll_to(driver, event)
@@ -98,6 +107,7 @@ def switch_to(driver, event):
 
 
 def scroll_to(driver, event):
+	event['type'] = 'scroll_to'
 	if 'target' in event and not isinstance(event['target'], dict):
 		event['target'] = {'type': 'css', 'value': event['target']}
 	driver.execute_script('arguments[0].scrollIntoView(true);', util.get_element(driver=driver, target=event['target']['value'], type=event['target']['type']))
