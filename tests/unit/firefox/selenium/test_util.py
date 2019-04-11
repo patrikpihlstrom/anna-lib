@@ -7,8 +7,8 @@ from anna_lib.selenium import driver, util
 
 class TestUtil(unittest.TestCase):
 	def setUp(self):
-		self.driver = driver.create({'driver': 'firefox', 'headless': True})
-		self.driver.get('http://annahub.se:8000/test')
+		self.driver = driver.create(driver='firefox', headless=True)
+		self.driver.get('http://localhost:8000/test')
 
 	def tearDown(self):
 		self.driver.close()

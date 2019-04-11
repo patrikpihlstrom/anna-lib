@@ -6,8 +6,8 @@ from anna_common.task import factory as task_factory
 
 class TestEvents(unittest.TestCase):
 	def setUp(self):
-		self.driver = driver.create({'driver': 'chrome', 'headless': True})
-		self.driver.get('http://annahub.se:8000/test')
+		self.driver = driver.create(driver='chrome', headless=True)
+		self.driver.get('http://localhost:8000/test')
 
 	def tearDown(self):
 		self.driver.close()
