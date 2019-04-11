@@ -25,8 +25,10 @@ def current_url(driver, assertion, timeout=16):
 		return current_url_is(driver, assertion['is'], timeout)
 
 
-def element_exists(driver, assertion, timeout=16):
+def element_exists(driver, target, timeout=16):
+	element = util.get_element(driver=driver, target=target, timeout=timeout)
 	return {
-		'key': 'element_exists', 'target': assertion['target'],
-		'passed': util.get_element(driver, assertion['target'], timeout) not in [None, False, []]
+		'key': 'element_exists', 'target': target,
+		'passed': hasattr(element, 'id') or (isinstance(element, list) and len(element) > 0),
+		'exceptions': element[1] if isinstance(element, tuple) and len(element) == 2 else None
 	}

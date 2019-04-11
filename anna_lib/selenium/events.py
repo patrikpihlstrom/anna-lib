@@ -1,5 +1,3 @@
-import time
-
 from selenium.webdriver import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
@@ -9,31 +7,21 @@ from selenium.common.exceptions import TimeoutException
 from . import util
 
 
-def send_keys(driver, event):
-	event['type'] = 'send_keys'
-	if wait(driver, event):
-		if 'target' in event and not isinstance(event['target'], dict):
-			event['target'] = {'type': 'css', 'value': event['target']}
-		element = util.get_element(driver=driver, target=event['target']['value'], type=event['target']['type'])
-		v = event['value'].encode('ascii', 'ignore').decode("utf-8")
-		element.send_keys(v)
+def send_keys(driver, target, value):
+	if wait(driver, target):
+		element = util.get_element(driver=driver, target=target)
+		element.send_keys(value.encode('ascii', 'ignore').decode("utf-8"))
 
 
-def submit(driver, event):
-	event['type'] = 'submit'
-	if wait(driver, event):
-		if 'target' in event and not isinstance(event['target'], dict):
-			event['target'] = {'type': 'css', 'value': event['target']}
-		element = util.get_element(driver=driver, target=event['target']['value'], type=event['target']['type'])
+def submit(driver, target):
+	if wait(driver, target):
+		element = util.get_element(driver=driver, target=target)
 		element.submit()
 
 
-def click(driver, event):
-	event['type'] = 'click'
-	if wait(driver, event):
-		if 'target' in event and not isinstance(event['target'], dict):
-			event['target'] = {'type': 'css', 'value': event['target']}
-		element = util.get_element(driver=driver, target=event['target']['value'], type=event['target']['type'])
+def click(driver, target):
+	if wait(driver, target):
+		element = util.get_element(driver=driver, target=target)
 		if element not in (None, False) and element.tag_name == 'option':
 			element.click()
 		else:
@@ -43,71 +31,47 @@ def click(driver, event):
 			action.perform()
 
 
-def hover(driver, event):
-	event['type'] = 'hover'
-	if wait(driver, event):
-		if 'target' in event and not isinstance(event['target'], dict):
-			event['target'] = {'type': 'css', 'value': event['target']}
-		element = util.get_element(driver=driver, target=event['target']['value'], type=event['target']['type'])
+def hover(driver, target):
+	if wait(driver, target):
+		element = util.get_element(driver=driver, target=target)
 		action = ActionChains(driver)
 		action.move_to_element(element)
 		action.perform()
 
 
-def get(driver, event):
-	event['type'] = 'get'
-	if 'target' in event and not isinstance(event['target'], dict):
-		event['target'] = {'type': 'css', 'value': event['target']}
-	driver.get(event['target'])
-
-
-def wait(driver, event):
+def wait(driver, target, clickable=False, required=True):
 	"""
 	Wait for an element to appear
+	:param clickable:
+	:param target:
+	:param required:
 	:param driver:
-	:param event:
 	:return:
 	"""
-	if 'type' not in event:
-		event['type'] = 'wait'
-	if 'target' in event and not isinstance(event['target'], dict):
-		event['target'] = {'type': 'css', 'value': event['target']}
 	try:
-		if event['type'] == 'click':
-			if event['target']['type'] == 'css':
-				WebDriverWait(driver, 16).until(ec.element_to_be_clickable((By.CSS_SELECTOR, event['target']['value'])))
-			elif event['target']['type'] == 'xpath':
-				WebDriverWait(driver, 16).until(ec.element_to_be_clickable((By.XPATH, event['target']['value'])))
+		if clickable:
+			if target.startswith('$css'):
+				WebDriverWait(driver, 16).until(ec.element_to_be_clickable((By.CSS_SELECTOR, target[4:])))
+			elif target.startswith('$xpath'):
+				WebDriverWait(driver, 16).until(ec.element_to_be_clickable((By.XPATH, target[6:])))
 		else:
-			if event['target']['type'] == 'css':
-				WebDriverWait(driver, 16).until(
-					ec.presence_of_element_located((By.CSS_SELECTOR, event['target']['value'])))
-			elif event['target']['type'] == 'xpath':
-				WebDriverWait(driver, 16).until(ec.presence_of_element_located((By.XPATH, event['target']['value'])))
+			if target.startswith('$css'):
+				WebDriverWait(driver, 16).until(ec.presence_of_element_located((By.CSS_SELECTOR, target[4:])))
+			elif target.startswith('$xpath'):
+				WebDriverWait(driver, 16).until(ec.presence_of_element_located((By.XPATH, target[6:])))
 	except TimeoutException as e:
-		if 'required' in event and not event['required']:
+		if not required:
 			return False
 		else:
 			raise e
 	return True
 
 
-def sleep(driver, event):
-	event['type'] = 'sleep'
-	time.sleep(event['value'])
-
-
-def switch_to(driver, event):
-	event['type'] = 'switch_to'
-	if 'target' in event and not isinstance(event['target'], dict):
-		event['target'] = {'type': 'css', 'value': event['target']}
-	scroll_to(driver, event)
-	element = util.get_element(driver=driver, target=event['target']['value'], type=event['target']['type'])
+def switch_to(driver, target):
+	scroll_to(driver, target)
+	element = util.get_element(driver=driver, target=target)
 	driver.switch_to.frame(element)
 
 
-def scroll_to(driver, event):
-	event['type'] = 'scroll_to'
-	if 'target' in event and not isinstance(event['target'], dict):
-		event['target'] = {'type': 'css', 'value': event['target']}
-	driver.execute_script('arguments[0].scrollIntoView(true);', util.get_element(driver=driver, target=event['target']['value'], type=event['target']['type']))
+def scroll_to(driver, target):
+	driver.execute_script('arguments[0].scrollIntoView(true);', util.get_element(driver=driver, target=target))
