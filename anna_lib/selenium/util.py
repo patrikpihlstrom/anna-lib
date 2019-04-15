@@ -1,18 +1,13 @@
 import time
+from typing import Union, Tuple
+
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.remote.webelement import WebElement
 
 
-def get_element(driver, target, get_first=True, timeout=16):
-	"""
-	Default behavior is to return the first element that matches the target
-	:param type:
-	:param driver:
-	:param target:
-	:param get_first:
-	:param timeout:
-	:return:
-	"""
-
+def get_element(driver: WebDriver, target: str, get_first: bool = True, timeout: int = 16) -> Union[
+	Tuple[bool, Union[TimeoutError, NoSuchElementException]], WebElement]:
 	if target.startswith('$xpath'):
 		return get_element_xpath(driver, target[6:], get_first, timeout)
 	elif target.startswith('$css'):
@@ -20,7 +15,8 @@ def get_element(driver, target, get_first=True, timeout=16):
 	return get_element_css(driver, target, get_first, timeout)
 
 
-def get_element_css(driver, target, get_first=True, timeout=16):
+def get_element_css(driver: WebDriver, target: str, get_first: bool = True, timeout: int = 16) -> Union[
+	Tuple[bool, Union[TimeoutError, NoSuchElementException]], WebElement]:
 	try:
 		if get_first:
 			return driver.find_element_by_css_selector(target)
@@ -33,7 +29,8 @@ def get_element_css(driver, target, get_first=True, timeout=16):
 		return get_element(driver, target, get_first, timeout - 1)
 
 
-def get_element_xpath(driver, target, get_first=True, timeout=16):
+def get_element_xpath(driver: WebDriver, target: str, get_first: bool = True, timeout: int = 16) -> Union[
+	Tuple[bool, Union[TimeoutError, NoSuchElementException]], WebElement]:
 	try:
 		if get_first:
 			return driver.find_element_by_xpath(target)
@@ -44,8 +41,3 @@ def get_element_xpath(driver, target, get_first=True, timeout=16):
 			return False, e
 		time.sleep(1)
 		return get_element(driver, '$xpath' + target, get_first, timeout - 1)
-
-
-def get_text(driver, target):
-	element = get_element(driver, target, True)
-	return element.text

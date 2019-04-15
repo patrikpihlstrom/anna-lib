@@ -3,8 +3,6 @@ The purpose of this package is to simplify the use of selenium.
 
 ### requirements
 [selenium](https://pypi.org/project/selenium/),
-[anna-common](https://pypi.org/project/anna-common/),
-[anna-unittasks](https://pypi.org/project/anna-unittasks/)
 
 ### installation
 ```bash

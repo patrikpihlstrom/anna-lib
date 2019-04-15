@@ -2,33 +2,22 @@ from . import util
 import time
 
 
-def current_url_in(driver, expected, timeout=16):
-	passed = expected in driver.current_url
+def in_url(driver: object, part: str, timeout: int = 16) -> bool:
+	passed = part in driver.current_url
 	if not passed and timeout > 0:
 		time.sleep(1)
-		return current_url_in(driver, expected, timeout - 1)
-	return {'key': 'current_url', 'passed': passed, 'current': driver.current_url, 'expected': ['in', expected]}
+		return in_url(driver, part, timeout - 1)
+	return passed
 
 
-def current_url_is(driver, expected, timeout=16):
+def url_equals(driver: object, expected: str, timeout: int = 16) -> bool:
 	passed = driver.current_url == expected
 	if not passed and timeout > 0:
 		time.sleep(1)
-		return current_url_is(driver, expected, timeout - 1)
-	return {'key': 'current_url', 'passed': passed, 'current': driver.current_url, 'expected': expected}
+		return url_equals(driver, expected, timeout - 1)
+	return passed
 
 
-def current_url(driver, assertion, timeout=16):
-	if 'in' in assertion:
-		return current_url_in(driver, assertion['in'], timeout)
-	elif 'is' in assertion:
-		return current_url_is(driver, assertion['is'], timeout)
-
-
-def element_exists(driver, target, timeout=16):
+def element_exists(driver: object, target: str, timeout: int = 16) -> bool:
 	element = util.get_element(driver=driver, target=target, timeout=timeout)
-	return {
-		'key': 'element_exists', 'target': target,
-		'passed': hasattr(element, 'id') or (isinstance(element, list) and len(element) > 0),
-		'exceptions': element[1] if isinstance(element, tuple) and len(element) == 2 else None
-	}
+	return hasattr(element, 'id') or (isinstance(element, list) and len(element) > 0)
