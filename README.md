@@ -2,7 +2,7 @@
 The purpose of this package is to simplify the use of selenium.
 
 ### requirements
-[selenium](https://pypi.org/project/selenium/),
+[selenium](https://pypi.org/project/selenium/)
 
 ### installation
 ```bash
