@@ -17,9 +17,15 @@ class TestInUrl(unittest.TestCase):
 		self.assertTrue(assertions.in_url(driver, 'http://localhost:8000/test/', timeout=0))
 
 	def test_not_passed(self):
-		self.assertFalse(assertions.in_url(driver, 'annahub.com', timeout=0))
-		self.assertFalse(assertions.in_url(driver, '/page', timeout=0))
-		self.assertFalse(assertions.in_url(driver, 'page/', timeout=0))
-		self.assertFalse(assertions.in_url(driver, '/pag/', timeout=0))
-		self.assertFalse(assertions.in_url(driver, 'http://localhost:8000/page', timeout=0))
-		self.assertFalse(assertions.in_url(driver, 'http://localhost:8000/page/', timeout=0))
+		with self.assertRaises(ValueError):
+			assertions.in_url(driver, 'annahub.com', timeout=0)
+		with self.assertRaises(ValueError):
+			assertions.in_url(driver, '/page', timeout=0)
+		with self.assertRaises(ValueError):
+			assertions.in_url(driver, 'page/', timeout=0)
+		with self.assertRaises(ValueError):
+			assertions.in_url(driver, '/pag/', timeout=0)
+		with self.assertRaises(ValueError):
+			assertions.in_url(driver, 'http://localhost:8000/page', timeout=0)
+		with self.assertRaises(ValueError):
+			assertions.in_url(driver, 'http://localhost:8000/page/', timeout=0)

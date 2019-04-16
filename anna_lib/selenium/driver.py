@@ -1,3 +1,5 @@
+import re
+
 from selenium import webdriver
 from selenium.webdriver.remote.webdriver import WebDriver
 
@@ -18,9 +20,7 @@ def create(driver: str = 'firefox', headless: bool = True, resolution: tuple = (
 	elif driver == 'firefox':
 		d = webdriver.Firefox(options=options)
 
-	if not (isinstance(resolution, (tuple, list)) and not (len(resolution) != 2) and not any(
-			not isinstance(axis, int) for axis in resolution)):
-		resolution = (1920, 1080)
-
-	d.set_window_size(resolution[0], resolution[1])
+	if not re.match(r"^[1-9]\d*,[1-9]\d*", ','.join(str(axis) for axis in resolution)):
+		raise TypeError('specify a valid resolution')
+	d.set_window_size(int(resolution[0]), int(resolution[1]))
 	return d

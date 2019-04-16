@@ -19,9 +19,15 @@ class TestUrlEquals(unittest.TestCase):
 		self.assertTrue(assertions.url_equals(self.driver, 'http://localhost:8000/test/?q=asdf+asdf+asdf', timeout=0))
 
 	def test_not_passed(self):
-		self.assertFalse(assertions.url_equals(self.driver, 'annahub.com', timeout=0))
-		self.assertFalse(assertions.url_equals(self.driver, '/page', timeout=0))
-		self.assertFalse(assertions.url_equals(self.driver, 'page/', timeout=0))
-		self.assertFalse(assertions.url_equals(self.driver, '/pag/', timeout=0))
-		self.assertFalse(assertions.url_equals(self.driver, 'http://localhost:8000/page', timeout=0))
-		self.assertFalse(assertions.url_equals(self.driver, 'http://localhost:8000/page/', timeout=0))
+		with self.assertRaises(ValueError):
+			assertions.url_equals(self.driver, 'annahub.com', timeout=0)
+		with self.assertRaises(ValueError):
+			assertions.url_equals(self.driver, '/page', timeout=0)
+		with self.assertRaises(ValueError):
+			assertions.url_equals(self.driver, 'page/', timeout=0)
+		with self.assertRaises(ValueError):
+			assertions.url_equals(self.driver, '/pag/', timeout=0)
+		with self.assertRaises(ValueError):
+			assertions.url_equals(self.driver, 'http://localhost:8000/page', timeout=0)
+		with self.assertRaises(ValueError):
+			assertions.url_equals(self.driver, 'http://localhost:8000/page/', timeout=0)

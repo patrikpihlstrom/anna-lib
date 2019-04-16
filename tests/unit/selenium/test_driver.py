@@ -51,3 +51,13 @@ class TestDriver(unittest.TestCase):
 		res = tuple(self.driver.get_window_size('current').values())
 		self.assertEqual((1024, 1024), res)
 		self.driver.close()
+
+	def test_create_invalid_resolution(self):
+		with self.assertRaises(TypeError):
+			create(driver='chrome', headless=True, resolution=(1024,))
+		with self.assertRaises(TypeError):
+			create(driver='chrome', headless=True, resolution=(-1024, 1024))
+		with self.assertRaises(TypeError):
+			create(driver='chrome', headless=True, resolution=(None,))
+		with self.assertRaises(TypeError):
+			create(driver='chrome', headless=True, resolution=('foo', 'bar'))

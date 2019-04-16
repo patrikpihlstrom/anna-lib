@@ -33,7 +33,7 @@ Use this module to create a webdriver based on a set of options:
 | resolution | tuple | no | (width, height) | (1920, 1080) |
 
 #### events
-Use this module to interact with pages. Each event requires a driver & a target, with the exception being the ```send_keys``` event which also requires a value.
+Use this module to interact with pages. Each event takes a driver, a target & a timeout which defaults to 16 seconds, with the exception being ```send_keys``` which also requires a value.
 The target is treated as a css selector unless it starts with ```'$xpath'```, in which case it is of course treated as an xpath selector.
 ```python
 from anna_lib.selenium import events, driver
@@ -48,5 +48,18 @@ events.switch_to(driver=firefox, target='iframe')
 ```
 
 #### assertions
+Use this module to check the state of a page, be it by the url or by the page's elements.
+Each assertion takes a driver, some input & a timeout parameter which defaults to 16 seconds.
+```python
+from anna_lib.selenium import assertions, driver
+firefox = driver.create('firefox', headless=True)
 
-
+try:
+	assertions.url_equals(driver=firefox, expected='about:blank')
+	assertions.in_url(driver=firefox, part='blank')
+	assertions.element_exists(driver=firefox, target='body')
+except ValueError as e:
+	print(str(e))
+except TypeError as e:
+	print(str(e))
+```
