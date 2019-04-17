@@ -15,6 +15,10 @@ def parse_site_config(config: object) -> tuple:
 
 
 def get_tasks(site: str) -> tuple:
+	if isinstance(site, (list, tuple)) and len(site) == 1:
+		return get_tasks(site[0])
+	elif not isinstance(site, str):
+		raise TypeError
 	package = get_site_package(site)
 	url, sequence = parse_site_config(import_module(package + '.config'))
 	tasks = []
