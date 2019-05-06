@@ -19,7 +19,7 @@ class AbstractTask(object):
 		self.__execute__()
 		self.after_execute()
 		if self.required:
-			self.passed = not any(not r['passed'] for r in self.result)
+			self.passed = not any(not r for r in self.result)
 		else:
 			self.passed = True
 
