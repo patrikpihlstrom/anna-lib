@@ -37,8 +37,7 @@ class AbstractTask(object):
 
 	def assert_element_exists(self, target: str) -> None:
 		try:
-			self.result.append({'assertion': 'element_exists',
-			                    'passed': assertions.element_exists(driver=self.driver, target=target)})
+			self.result.append({'assertion': 'element_exists', 'passed': assertions.element_exists(driver=self.driver, target=target)})
 		except TypeError as e:
 			self.result.append(
 				{

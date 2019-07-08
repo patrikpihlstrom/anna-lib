@@ -4,31 +4,31 @@ import string
 from importlib import import_module
 
 
-def get_site_package(site: str) -> str:
-	if site == 'test':
+def get_namespace_package(namespace: str) -> str:
+	if namespace == 'test':
 		return 'anna_unittasks'
-	return 'anna_tasks.' + site
+	return 'anna_tasks.' + namespace
 
 
-def parse_site_config(config: object) -> tuple:
+def parse_namespace_config(config: object) -> tuple:
 	return getattr(config, 'url'), getattr(config, 'sequence')
 
 
-def get_tasks(site: str) -> tuple:
-	if isinstance(site, (list, tuple)) and len(site) == 1:
-		return get_tasks(site[0])
-	elif not isinstance(site, str):
+def get_tasks(namespace: str) -> tuple:
+	if isinstance(namespace, (list, tuple)) and len(namespace) == 1:
+		return get_tasks(namespace[0])
+	elif not isinstance(namespace, str):
 		raise TypeError
-	package = get_site_package(site)
-	url, sequence = parse_site_config(import_module(package + '.config'))
+	package = get_namespace_package(namespace)
+	url, sequence = parse_namespace_config(import_module(package + '.config'))
 	tasks = []
 	for task in sequence:
-		tasks.append(get_task(site, task))
+		tasks.append(get_task(namespace, task))
 	return url, tasks
 
 
-def get_task(site: str, task: str) -> tuple:
-	task = get_site_package(site) + '.' + task
+def get_task(namespace: str, task: str) -> tuple:
+	task = get_namespace_package(namespace) + '.' + task
 	module = import_module(task)
 	return task, inspect.getsource(module)
 
@@ -41,6 +41,6 @@ def load_task(driver: object, task: tuple) -> tuple:
 	return module.__dict__['__name__'], task
 
 
-def create(driver: object, site: str, task: str) -> object:
-	task = get_task(site, task)
+def create(driver: object, namespace: str, task: str) -> object:
+	task = get_task(namespace, task)
 	return load_task(driver, task)
