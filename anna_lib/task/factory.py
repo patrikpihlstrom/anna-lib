@@ -4,12 +4,6 @@ import string
 from importlib import import_module
 
 
-def get_namespace_package(namespace: str) -> str:
-	if namespace == 'test':
-		return 'anna_unittasks'
-	return 'anna_tasks.' + namespace
-
-
 def parse_namespace_config(config: object) -> tuple:
 	return getattr(config, 'url'), getattr(config, 'sequence')
 
@@ -19,8 +13,7 @@ def get_tasks(namespace: str) -> tuple:
 		return get_tasks(namespace[0])
 	elif not isinstance(namespace, str):
 		raise TypeError
-	package = get_namespace_package(namespace)
-	url, sequence = parse_namespace_config(import_module(package + '.config'))
+	url, sequence = parse_namespace_config(import_module(namespace + '.config'))
 	tasks = []
 	for task in sequence:
 		tasks.append(get_task(namespace, task))
@@ -28,8 +21,7 @@ def get_tasks(namespace: str) -> tuple:
 
 
 def get_task(namespace: str, task: str) -> tuple:
-	task = get_namespace_package(namespace) + '.' + task
-	module = import_module(task)
+	module = import_module(namespace + '.' + task)
 	return task, inspect.getsource(module)
 
 
