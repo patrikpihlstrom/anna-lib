@@ -9,6 +9,7 @@ class AbstractTask(EventExecutor):
         super().__init__(driver)
         self.result = []
         self.passed = False
+        self.timeout = 16
 
     def execute(self) -> None:
         self.before_execute()
@@ -32,7 +33,7 @@ class AbstractTask(EventExecutor):
         try:
             method = getattr(assertions, assertion)
             self.result.append(
-                {'assertion': assertion, 'passed': method(self.driver, param) is True})
+                {'assertion': assertion, 'passed': method(self.driver, param, timeout=self.timeout) is True})
         except TypeError as e:
             self.result.append(
                 {
